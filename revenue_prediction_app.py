@@ -128,7 +128,7 @@ if submit == True:
     st.markdown("---")
     st.metric("", f"Predicted revenue ${predicted_revenue:,.0f} million", f"{pct_change:.1f} % vs last month")
 
-    base = alt.Chart(df_monthly_revenue).encode(alt.X("DATE", title="Date"))
+    base = alt.Chart(df_monthly_revenue).encode(alt.X("DATE", title="Date", axis=alt.Axis(labelAngle=-45)))
     bars = base.mark_bar().encode(
         y=alt.Y("TOTAL_COST", title="Budget"),
         color=alt.Color("CHANNEL", legend=alt.Legend(orient="top", title=" ")),
