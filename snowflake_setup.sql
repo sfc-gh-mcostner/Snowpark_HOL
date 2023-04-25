@@ -1,14 +1,14 @@
 
 -- create warehouse, database, and schema
-use role accountadmin;
-create warehouse wh_hol_blue_cloud;
-use warehouse wh_hol_blue_cloud;
-create database db_hol_blue_cloud;
-use database db_hol_blue_cloud;
-create schema roi_prediction;
+use role sysadmin;
+create or replace warehouse wh_snowpark_hol;
+use warehouse wh_snowpark_hol;
+create or replace database db_snowpark_hol;
+use database db_snowpark_hol;
+create or replace schema roi_prediction;
 
 -- Create table CAMPAIGN_SPEND from data hosted on publicly accessible S3 bucket
-create file format csvformat
+create or replace file format csvformat
     skip_header=1
     type='CSV'
 ;
@@ -18,7 +18,7 @@ create stage campaign_data_stage
     url='s3://sfquickstarts/Summit 2022 Keynote Demo/campaign_spend/'
 ;
 
-create table campaign_spend (
+create or replace table campaign_spend (
     campaign varchar(60)
     ,channel varchar(60)
     ,date date
@@ -38,22 +38,14 @@ create or replace table randomize_spend (
     ,lower number(38,0)
 );
 
-insert into randomize_spend (
-    channel, lower, upper
-) values 
-    ('video',-20,-5),
-    ('search_engine',0,10),
-    ('social_media',-40,-30),
-    ('email',-10,10)
-;
 
 -- Create table MONTHLY_REVENUE from data hosted on publicly accessible S3 bucket
-create stage monthly_revenue_data_stage
+create or replace stage monthly_revenue_data_stage
     file_format=csvformat
     url='s3://sfquickstarts/Summit 2022 Keynote Demo/monthly_revenue/'
 ;
 
-create table monthly_revenue (
+create or replace table monthly_revenue (
     year number(38,0)
     ,month number(38,0)
     ,revenue float
@@ -132,7 +124,6 @@ create stage demo_models;
 create stage demo_udfs;
 
 -- Grant privileges to workshop role for accessing stages
-
 create role snowpark_workshop_role;
 grant all privileges on stage demo_sprocs to role snowpark_workshop_role;
 grant all privileges on stage demo_models to role snowpark_workshop_role;
